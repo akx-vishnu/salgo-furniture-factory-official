@@ -1,70 +1,123 @@
 @import "tailwindcss";
 
+/* ===========================
+   SALGO FURNITURE FACTORY
+   Premium Light Theme v1.0
+   =========================== */
+
 @theme {
+  --color-cream-50: #fafaf9;
+  --color-cream-100: #f5f5f4;
+  --color-cream-200: #e7e5e4;
+  
+  --color-charcoal-900: #1c1917; /* Stone 900 */
+  --color-charcoal-950: #0c0a09; /* Stone 950 */
+
+  --color-gold-400: #d4af37;
+  --color-gold-500: #b8882a;
+  --color-gold-600: #854d0e;
+  --color-brand-teal: #145a55;
+
   --font-serif: "Playfair Display", serif;
   --font-sans: "Inter", sans-serif;
 
-  --color-cream-50: #fdfbf7;
-  --color-cream-100: #f8f4eb;
-  --color-cream-200: #ede3d1;
-  
-  --color-charcoal-50: #f4f5f5;
-  --color-charcoal-400: #717675;
-  --color-charcoal-600: #4a4f4e;
-  --color-charcoal-900: #1a1c1c;
-  --color-charcoal-950: #0f1111;
-
-  --color-gold-400: #d4af37;
-  --color-gold-500: #b8860b;
-  --color-gold-600: #996515;
-
-  --color-brand-teal: #145a55;
-
-  --shadow-premium: 0 25px 50px -12px rgba(0, 0, 0, 0.05);
+  /* Enhanced Spacing */
+  --spacing-128: 32rem;
+  --spacing-160: 40rem;
 }
 
-@layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-  
-  body {
-    @apply bg-cream-50 text-charcoal-900 font-sans antialiased;
-    cursor: none;
-  }
+/* --- Smooth Scroll (Lenis) --- */
+html.lenis {
+  height: auto;
 }
 
-@layer utilities {
-  .text-gradient-gold {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-gold-400 via-gold-600 to-gold-400;
-  }
-  
-  .glass-nav {
-    @apply bg-white/70 backdrop-blur-md border-b border-white/20;
-  }
-  
-  .premium-card {
-    @apply bg-white border border-charcoal-100 shadow-premium hover:shadow-2xl transition-all duration-500;
-  }
-
-  .vertical-text {
-    writing-mode: vertical-rl;
-  }
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
 }
 
-/* Custom Scrollbar */
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+/* --- Base & Reset --- */
+body {
+  background-color: var(--color-cream-50);
+  color: var(--color-charcoal-900);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--color-charcoal-950);
+}
+
+/* --- Light Premium Utilities --- */
+.glass-nav {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.premium-card {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.premium-card:hover {
+  background: white;
+  border-color: rgba(184, 136, 42, 0.3);
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px -10px rgba(184, 136, 42, 0.1);
+}
+
+.text-gradient-gold {
+  background: linear-gradient(135deg, #b8882a 0%, #d4af37 50%, #b8882a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.section-divider {
+  width: 100px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-gold-500), transparent);
+  margin: 2.5rem auto;
+}
+
+.gold-glow {
+  box-shadow: 0 0 40px rgba(184, 136, 42, 0.05);
+}
+
+/* --- Custom Scrollbar --- */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 5px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-cream-50;
+  background: var(--color-cream-50);
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-charcoal-200 rounded-full border-2 border-cream-50;
+  background: var(--color-cream-200);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-charcoal-300;
+  background: var(--color-gold-400);
 }
+
+::selection {
+  background-color: var(--color-gold-400);
+  color: white;
+}
+

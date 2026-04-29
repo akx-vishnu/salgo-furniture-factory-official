@@ -1,116 +1,182 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X, ArrowRight } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
+import { Instagram, Youtube } from './Icons'
 
-const navLinks = [
-  { name: 'Home', path: '/' },
-  { name: 'Gallery', path: '/gallery' },
-  { name: 'Contact', path: '/contact' },
+const LINKS = [
+  { label: 'Home', to: '/', type: 'route' },
+  { label: 'Gallery', to: '/gallery', type: 'route' },
+  { label: 'Services', to: '#services', type: 'hash' },
+  { label: 'About', to: '#about', type: 'hash' },
+  { label: 'Contact', to: '/contact', type: 'route' },
 ]
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const location = useLocation()
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50)
-    }
+    const handleScroll = () => setIsScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll)
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   // Close mobile menu on route change
   useEffect(() => {
-    setIsOpen(false)
+    setIsMobileMenuOpen(false)
   }, [location.pathname])
 
+  const isActive = (to) => location.pathname === to
+
   return (
-    <nav 
-      className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ${
-        isScrolled ? 'py-4 bg-white/80 backdrop-blur-xl shadow-lg border-b border-charcoal-100' : 'py-8 bg-transparent'
+    <nav
+      className={`fixed w-full z-50 transition-all duration-500 ${
+        isScrolled ? 'glass-nav py-4 shadow-sm top-0' : 'py-8 top-12'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-        {/* Brand */}
-        <Link to="/" className="flex items-center gap-3 group">
-          <motion.div 
-            whileHover={{ rotate: 10, scale: 1.1 }}
-            className="w-12 h-12 flex items-center justify-center rounded-2xl bg-charcoal-950 shadow-xl overflow-hidden"
-          >
-            <img src="/logo.png" alt="Salgo" className="w-8 h-8 object-contain" />
-          </motion.div>
-          <div className="flex flex-col">
-            <span className="font-serif text-3xl font-bold tracking-tighter text-charcoal-950 leading-none">
+        {/* Logo */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <Link to="/" className="flex items-center gap-3">
+            <img src="/logo.png" alt="Salgo Logo" className="h-10 md:h-12 w-auto object-contain" />
+            <span className="text-2xl font-serif font-bold tracking-tighter text-charcoal-950">
               SALGO<span className="text-gold-500">.</span>
             </span>
-            <span className="text-[10px] tracking-[0.4em] uppercase text-charcoal-400 font-bold">Factory</span>
-          </div>
-        </Link>
+          </Link>
+        </motion.div>
 
-        {/* Desktop Nav */}
-        <div className="hidden md:flex items-center gap-12">
-          <div className="flex items-center gap-10">
-            {navLinks.map((link) => (
-              <Link 
-                key={link.name} 
-                to={link.path}
-                className={`text-xs font-bold tracking-[0.2em] uppercase transition-colors relative group py-2 ${
-                  location.pathname === link.path ? 'text-charcoal-950' : 'text-charcoal-600 hover:text-charcoal-950'
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center gap-8 lg:gap-10">
+          {LINKS.map((item) => (
+            item.type === 'route' ? (
+              <Link
+                key={item.label}
+                to={item.to}
+                className={`text-[10px] font-bold tracking-[0.3em] uppercase transition-colors ${
+                  isActive(item.to)
+                    ? 'text-gold-500'
+                    : 'text-charcoal-900/80 hover:text-gold-500'
                 }`}
               >
-                {link.name}
-                <span className={`absolute bottom-0 left-0 h-[2px] bg-gold-400 transition-all duration-300 ${
-                  location.pathname === link.path ? 'w-full' : 'w-0 group-hover:w-full'
-                }`} />
+                {item.label}
               </Link>
-            ))}
+            ) : (
+              <a
+                key={item.label}
+                href={location.pathname === '/' ? item.to : `/${item.to}`}
+                className="text-[10px] font-bold tracking-[0.3em] uppercase text-charcoal-900/80 hover:text-gold-500 transition-colors"
+              >
+                {item.label}
+              </a>
+            )
+          ))}
+
+          <div className="h-4 w-[1px] bg-black/10" />
+
+          <div className="flex items-center gap-5">
+            <a
+              href="https://www.instagram.com/salgo_tikka/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="text-charcoal-900/60 hover:text-gold-500 transition-colors"
+            >
+              <Instagram size={18} strokeWidth={1.5} />
+            </a>
+            <a
+              href="https://www.youtube.com/@salgotikka"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="YouTube"
+              className="text-charcoal-900/60 hover:text-gold-500 transition-colors"
+            >
+              <Youtube size={18} strokeWidth={1.5} />
+            </a>
           </div>
 
-          <Link to="/contact">
-            <button className="bg-charcoal-950 text-white px-8 py-3.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-gold-500 hover:shadow-lg hover:shadow-gold-500/20 transition-all duration-300 flex items-center gap-3">
-              Request Catalog
-              <ArrowRight size={14} />
-            </button>
-          </Link>
+          <a
+            href="https://wa.me/919995454719?text=Hello%2C%20I%20am%20interested%20in%20your%20furniture.%20Could%20you%20please%20share%20more%20details%3F"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-charcoal-950 text-white px-8 py-3 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase hover:bg-gold-500 transition-all duration-500 shadow-xl shadow-black/5"
+          >
+            Inquire
+          </a>
         </div>
 
-        {/* Mobile Toggle */}
-        <button 
-          className="md:hidden w-12 h-12 flex items-center justify-center text-charcoal-950"
-          onClick={() => setIsOpen(!isOpen)}
+        {/* Mobile Menu Toggle */}
+        <button
+          className="md:hidden text-charcoal-950"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label="Toggle menu"
         >
-          {isOpen ? <X size={28} /> : <Menu size={28} />}
+          {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       {/* Mobile Menu */}
       <AnimatePresence>
-        {isOpen && (
+        {isMobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white border-b border-charcoal-100 overflow-hidden"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="absolute top-full left-0 w-full bg-cream-50 border-b border-black/5 p-8 flex flex-col gap-6 md:hidden shadow-2xl"
           >
-            <div className="px-6 py-12 flex flex-col gap-8">
-              {navLinks.map((link) => (
-                <Link 
-                  key={link.name} 
-                  to={link.path}
-                  className="text-2xl font-serif text-charcoal-950"
+            {LINKS.map((item) => (
+              item.type === 'route' ? (
+                <Link
+                  key={item.label}
+                  to={item.to}
+                  className={`text-lg font-serif font-bold ${
+                    isActive(item.to) ? 'text-gold-500' : 'text-charcoal-950'
+                  }`}
                 >
-                  {link.name}
+                  {item.label}
                 </Link>
-              ))}
-              <Link to="/contact">
-                <button className="w-full bg-charcoal-950 text-white py-5 rounded-2xl font-bold tracking-widest uppercase text-xs">
-                  Request Catalog
-                </button>
-              </Link>
+              ) : (
+                <a
+                  key={item.label}
+                  href={location.pathname === '/' ? item.to : `/${item.to}`}
+                  className="text-lg font-serif font-bold text-charcoal-950"
+                >
+                  {item.label}
+                </a>
+              )
+            ))}
+
+            <div className="flex items-center gap-5 pt-2">
+              <a
+                href="https://www.instagram.com/salgo_tikka/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-charcoal-900/60 hover:text-gold-500 transition-colors"
+              >
+                <Instagram size={20} strokeWidth={1.5} />
+              </a>
+              <a
+                href="https://www.youtube.com/@salgotikka"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-charcoal-900/60 hover:text-gold-500 transition-colors"
+              >
+                <Youtube size={20} strokeWidth={1.5} />
+              </a>
             </div>
+
+            <a
+              href="https://wa.me/919995454719?text=Hello%2C%20I%20am%20interested%20in%20your%20furniture.%20Could%20you%20please%20share%20more%20details%3F"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-gold-500 text-charcoal-950 text-center py-4 rounded-xl font-bold uppercase tracking-widest text-xs"
+            >
+              WhatsApp Us
+            </a>
           </motion.div>
         )}
       </AnimatePresence>
